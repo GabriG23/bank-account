@@ -1,0 +1,4 @@
+clientID,name,surname,username,email,registration_date,client_status,birthdate,phone,address
+1,Gabriele,Greco,gabri,gabriele.greco@agmsolutions.net,2023-03-13,ACTIVE,1996-05-09,3276350038,torino129
+2,Ange,Bonheur,ange,ange.bonheur@agmsolutions.net,2023-03-13,SUSPENDED,1998-01-01,123456789,torino800
+3,Lorenzo,PourPour,lore,lorenzo.pourpour@agmsolutions.net,2023-03-13,CLOSED,2003-02-02,987654321,torino500

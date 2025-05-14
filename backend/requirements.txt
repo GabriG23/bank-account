@@ -1,7 +1,0 @@
-fastapi
-uvicorn
-bcrypt
-pydantic
-python-dotenv
-httpx
-pytest
