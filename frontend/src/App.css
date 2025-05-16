@@ -1,74 +1,39 @@
-/* Layout principale */
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
-}
-
-
-.list-group-item.active:hover,
-.list-group-item.active:focus {
-  background-color: #00a8ec !important;
-  border-color: #00a8ec !important;
-  color: white !important;
-}
-/* Logo animazione e hover */
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
-}
-
-/* Animazione logo */
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
-}
-
-/* Card generica */
-.card {
-  padding: 2em;
-}
-
-.read-the-docs {
-  color: #888;
-}
-
-/* Navbar personalizzata */
 .custom-navbar {
-  background-color: #e0e2e4; /* grigio chiaro */
-  padding: 0.5rem 2rem;
+  background-color: #f1f1f1 !important; /* grigio chiaro */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-/* Colori del testo nella navbar */
-.custom-navbar .navbar-text,
-.custom-navbar .navbar-brand,
-.custom-navbar span,
 .custom-navbar .nav-link {
-  color: #000;
+  color: #333 !important; /* testo più scuro */
 }
 
-/* Link attivo nella navbar (usa Bootstrap .active) */
-.custom-navbar .nav-link.active {
-  color: #0d6efd !important; /* blu Bootstrap */
-  font-weight: bold;
-  border-bottom: 2px solid #0d6efd;
+.custom-navbar .nav-link:hover {
+  color: #000 !important; /* al passaggio del mouse */
+}
+
+.custom-navbar .navbar-text {
+  color: #333 !important;
+}
+
+footer a:hover {
+  color: #007bff;
+}
+
+.min-vh-75 {
+  min-height: 80vh;
+}
+
+
+body {
+  margin: 0;
+  padding: 0;
+}
+
+main {
+  padding-top: 10px; /* altezza reale navbar */
+  min-height: calc(100vh - 160px); /* navbar + footer (approssimato) */
+}
+
+.fill-content {
+  min-height: calc(100vh - 160px);
 }

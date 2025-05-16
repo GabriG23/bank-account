@@ -2,6 +2,7 @@
 from django.db import models
 from django.core.exceptions import ValidationError
 from decimal import Decimal
+from django.utils import timezone
 
 # link models.Model:    https://docs.djangoproject.com/en/5.1/topics/db/models/
 # link abstract class: https://docs.djangoproject.com/en/5.2/topics/db/models/#abstract-base-classes
@@ -29,10 +30,8 @@ class Client(models.Model):               # clienti delle banca
     surname = models.CharField(max_length=100)
     username = models.CharField(max_length=100, unique=True)
     email = models.EmailField(unique=True)
-    registration_date = models.DateField(auto_now_add=True)
-    client_status = models.CharField(max_length=50, choices=[('ACTIVE', 'Active'),
-                                                             ('SUSPENDED', 'Suspended'),
-                                                             ('CLOSED', 'Closed')])
+    registration_date = models.DateField(null=True, blank=True) 
+    client_status = models.CharField(max_length=50, choices=[('OPEN', 'Open'), ('CLOSED', 'Closed')])
     birthdate = models.DateField(null=True, blank=True)
     phone = models.CharField(max_length=20, null=True, blank=True)
     address = models.CharField(max_length=255, null=True, blank=True)
@@ -40,21 +39,28 @@ class Client(models.Model):               # clienti delle banca
     def __str__(self):
         return f"Client {self.username} ({self.name} {self.surname})"
     
+    def save(self, *args, **kwargs):
+        if not self.registration_date:
+            self.registration_date = timezone.now().date()
+        super().save(*args, **kwargs)
 
-class Account(models.Model):        # account del cliente
+class Account(models.Model):
     accountID = models.BigAutoField(primary_key=True)
-    clientID = models.ForeignKey(Client, on_delete=models.CASCADE, related_name='accounts')    # on_delete=models.CASCADE: se l'oggetto è eliminato, cancellerà tutti gli oggetti connessi
-    balance = models.DecimalField(max_digits=12, decimal_places=2)                             # related_name: usato per specificare il tipo di relazione con la tabella
-    opening_date = models.DateField(auto_now_add=True)
-    account_type = models.CharField(max_length=20, choices=[('DEBT', 'Debt'), 
-                                                            ('CREDIT', 'Credit')])
-    account_status = models.CharField(max_length=50, choices=[('OPEN', 'Open'), 
-                                                              ('CLOSED', 'Closed'), 
-                                                              ('FREEZE', 'Freeze')])
+    clientID = models.ForeignKey(Client, on_delete=models.CASCADE, related_name='accounts')
+    iban = models.CharField(max_length=34, unique=True)
+    balance = models.DecimalField(max_digits=12, decimal_places=2)
+    opening_date = models.DateField(null=True, blank=True)
+    account_type = models.CharField(max_length=20, choices=[('DEBT', 'Debt'), ('CREDIT', 'Credit')])
+    account_status = models.CharField(max_length=50, choices=[('OPEN', 'Open'), ('CLOSED', 'Closed')])
 
     def __str__(self):
         return f"Account {self.accountID} ({self.account_type}) ({self.account_status})"
-    
+
+    def save(self, *args, **kwargs):
+        if not self.opening_date:
+            self.opening_date = timezone.now().date()
+        super().save(*args, **kwargs)
+
     def deposit(self, amount):      # non ho limiti su quanto depositare
         if amount <= 0:
             raise ValidationError("L'importo del deposito deve essere positivo")
@@ -92,12 +98,6 @@ class Account(models.Model):        # account del cliente
         if self.accountID == target_account:
             raise ValidationError("Non puoi trasferire fondi allo stesso account.")
 
-        amount = Decimal(amount)
-        if amount > 1000:    # Bonifico "pending" se > 1000€
-            create_transaction(self, target_account, self.clientID, amount, 'TRANSFER', 'PENDING')
-            
-            return 'pending'
-
         self.withdraw(amount)           # Esegui bonifico se sotto soglia
         target_account.deposit(amount)
         create_transaction(self, target_account, self.clientID, amount, 'TRANSFER', 'COMPLETED')
@@ -108,17 +108,15 @@ class Transaction(models.Model):    # Transazione fatte dal cliente
     from_account = models.ForeignKey(Account, on_delete=models.CASCADE, related_name='outgoing_operations', null=True, blank=True)
     to_account = models.ForeignKey(Account, on_delete=models.CASCADE, related_name='incoming_operations', null=True, blank=True)
     clientID = models.ForeignKey(Client, on_delete=models.CASCADE, related_name='transactions')
-
     amount = models.DecimalField(max_digits=12, decimal_places=2)
-    transaction_date = models.DateTimeField(auto_now_add=True)
-    transaction_type = models.CharField(max_length=20, choices=[('DEPOSIT', 'Deposit'),
-                                                              ('WITHDRAW', 'Withdraw'),
-                                                              ('TRANSFER', 'Transfer')])
-    transaction_status = models.CharField(max_length=50, choices=[
-        ('COMPLETED', 'Completed'),
-        ('PENDING', 'Pending'),
-        ('FAILED', 'Failed')
-    ])
+    transaction_date = models.DateTimeField(null=True, blank=True)
+    transaction_type = models.CharField(max_length=20, choices=[('DEPOSIT', 'Deposit'), ('WITHDRAW', 'Withdraw'), ('TRANSFER', 'Transfer')])
+    transaction_status = models.CharField(max_length=50, choices=[('COMPLETED', 'Completed'), ('FAILED', 'Failed')])
 
     def __str__(self):
         return f"Transaction {self.transactionID} ({self.transaction_type})"
+    
+    def save(self, *args, **kwargs):
+        if not self.transaction_date:
+            self.transaction_date = timezone.now().date()
+        super().save(*args, **kwargs)

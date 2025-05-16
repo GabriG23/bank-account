@@ -20,7 +20,7 @@ class AccountResource(resources.ModelResource):
     class Meta:
         model = Account
         import_id_fields = ('accountID',)
-        fields = ('accountID', 'clientID', 'balance', 'opening_date', 'account_type', 'account_status')
+        fields = ('accountID', 'clientID', 'iban', 'balance', 'opening_date', 'account_type', 'account_status')
 
 @admin.register(Account)
 class AccountAdmin(ImportExportModelAdmin):
@@ -30,7 +30,7 @@ class TransactionResource(resources.ModelResource):
     class Meta:
         model = Transaction
         import_id_fields = ('transactionID',)
-        fields = ('transactionID', 'clientID', 'from_account', 'to_account', 'amount', 'transaction_type', 'transaction_status')
+        fields = ('transactionID', 'from_account', 'to_account', 'clientID', 'amount', 'transaction_date', 'transaction_type', 'transaction_status')
 
 @admin.register(Transaction)
 class TransactionAdmin(ImportExportModelAdmin):

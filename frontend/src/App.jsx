@@ -1,6 +1,12 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { useState, useEffect } from 'react';
-import Homepage from './components/homepage';
+import HomepageClosed from './components/homepage';
+import Layout from './components/layout'
+import AccountStatus from './components/accountstatus';
+import Operation from './components/operations'
+import Transaction from './components/transaction';
+import Dashboard from './components/dashboard'
+
 import API from './API';
 
 function App() {
@@ -42,44 +48,74 @@ function App() {
   }, [clientID]);
 
   return (
-    <Router>
-      <Routes>
-        <Route path='/' element={check ? <Homepage.HomepageOpen clientID={clientID} clientStatus={clientStatus} username={username} /> : <Homepage.HomepageClosed clientID={clientID} clientStatus={clientStatus} username={username}/>} />
-      </Routes>
-    </Router>
+    <>
+      <Router>
+        <Routes>
+          <Route path="/" element={<Layout username={username} />}>
+            <Route
+              index
+              element={
+                check
+                  ? <AccountStatus clientID={clientID} clientStatus={clientStatus} />
+                  : <HomepageClosed clientID={clientID} clientStatus={clientStatus} />
+              }
+            />
+            <Route path="/operation" element={<Operation clientID={clientID} clientStatus={clientStatus}/>} />
+            <Route path="/transaction" element={<Transaction clientID={clientID}/>} />
+            <Route path="/dashboard" element={<Dashboard clientID={clientID} clientStatus={clientStatus}/>} />
+          </Route>
+        </Routes>
+      </Router>
+    </>
   );
 }
 
 export default App;
 
+/*
+
+separare i componenti
+dashboard
+operazioni
+dettagli account
+
+table per le transazioni dell'utente
+date.table
+
+libreria per l'ok
+tailwind
+
+check sull'iban giusto
+*/
 
 
 
-
-
-{/* <Route path="/client" element={<ClientPageWrapper />} /> */}
-// function ClientPageWrapper() {
-//   const [user, setUser] = useState(null);
-//   const [loading, setLoading] = useState(true);
-//   const navigate = useNavigate();
-
-//   useEffect(() => {
-//     API.getUserInfo()
-//       .then((data) => {
-//         setUser(data);
-//         setLoading(false);
-//       })
-//       .catch(() => {
-//         navigate('/'); // se non autenticato, torna alla homepage
-//       });
-//   }, []);
-
-//   const handleLogout = async () => {
-//     await API.logOut();
-//     navigate('/');
-//   };
-
-//   if (loading) return <div>Caricamento...</div>;
-
-//   return <ClientPage user={user} action={handleLogout} />;
+// sto gestendo degli account bancari:
+// quando passo alla route Transaction:
+//   return (
+//     <>
+//       <Router>
+//         <Routes>
+//           <Route path="/" element={<Layout username={username} />}>
+//             <Route
+//               index
+//               element={
+//                 check
+//                   ? <AccountStatus clientID={clientID} clientStatus={clientStatus} />
+//                   : <HomepageClosed clientID={clientID} clientStatus={clientStatus} />
+//               }
+//             />
+//             <Route path="/operation" element={<Operation clientID={clientID} clientStatus={clientStatus}/>} />
+//             <Route path="/transaction" element={<Transaction clientID={clientID}/>} />
+//             {/* <Route path="/dashboard" element={<Operation />} /> */}
+//           </Route>
+//         </Routes>
+//       </Router>
+//     </>
+//   );
 // }
+
+// voglio che siano visualizzati a sinitra gli account attivi da selezionare
+// mentre a destra una tabella con tutte le transizione effettuate per quell'account
+
+// voglio a sinistra
