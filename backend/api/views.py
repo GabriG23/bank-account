@@ -125,31 +125,29 @@ class AccountViewSet(viewsets.ModelViewSet):    # view del Client
     
     @action(detail=True, methods=['post'])
     def transfer(self, request, pk=None):
-        from_account = self.get_object()  # L'account sorgente (quello nella URL)
-        iban = request.data.get("iban")   # IBAN del destinatario
-        amount = request.data.get("amount")
+        from_account = self.get_object()    # L'account sorgente (quello nella URL)
+        iban = request.data.get("iban")     # IBAN del destinatario
+        amount = request.data.get("amount") # prende l'amount
 
-        if not iban or not amount:
+        if not iban or not amount:      # controlla se sono stati inviati
             return Response({'error': 'IBAN e importo sono obbligatori'}, status=400)
 
         try:
-            amount = Decimal(amount)
-            if amount <= 0:
+            amount = Decimal(amount)    # converte in decimal
+            if amount <= 0: # controllo dell'importo positivo
                 raise InvalidOperation("L'importo deve essere positivo.")
         except (InvalidOperation, TypeError):
             return Response({'error': 'Importo non valido'}, status=400)
 
-        # Evita auto-bonifici
-        if iban == from_account.iban:
+        if iban == from_account.iban:   # evitiamo di farci degli auto bonifici
             return Response({'error': 'Non puoi trasferire fondi allo stesso IBAN.'}, status=400)
 
-        # Cerca il conto destinatario
-        try:
+        try:    # cerco il conto destinatario usando l'iban (univoco)
             target_account = Account.objects.get(iban=iban)
         except Account.DoesNotExist:
             return Response({'error': 'IBAN destinatario non trovato.'}, status=404)
 
-        if target_account.account_status != 'OPEN':
+        if target_account.account_status != 'OPEN':     #
             return Response({'error': 'Il conto destinatario è chiuso.'}, status=400)
 
         # Esegui la transazione
@@ -171,27 +169,28 @@ class TransactionViewSet(viewsets.ModelViewSet):
 
     @action(detail=False, methods=['get'], url_path='by-client-account')
     def by_client_account(self, request):
-        client_id = request.query_params.get('clientID')
-        account_id = request.query_params.get('accountID')
+        client_id = request.query_params.get('clientID')        # prende il clientID dalla request
+        account_id = request.query_params.get('accountID')      # prende l'accountID dalla request
 
-        if not client_id or not account_id:
+        if not client_id or not account_id: # controlla se sono stati inviati
             return Response({'error': 'clientID e accountID sono obbligatori'}, status=status.HTTP_400_BAD_REQUEST)
 
         transactions = Transaction.objects.filter(      # Filtra le transazioni dove l'account è presente come mittente o destinatario
             Q(from_account__accountID=account_id) | Q(to_account__accountID=account_id),
             clientID__clientID=client_id    # Usa clientID__clientID correttamente (doppio underscore perché è foreign key).
         )
+        # Q(...) | Q(...) usa l'oggetto Q per permettere filtri complessi con operatori logici. Qui si richiedono le transizioni in cui l'account è coinvolto come mittente o destinatario
 
-        if not transactions.exists():
+        if not transactions.exists():   # se la transizioni non esiste ritorna errore
             return Response({'message': 'Nessuna transazione trovata per questo account e client.'}, status=status.HTTP_404_NOT_FOUND)
 
-        serializer = self.get_serializer(transactions, many=True)
+        serializer = self.get_serializer(transactions, many=True)   # crea il serializer
         return Response(serializer.data)
     
     @action(detail=True, methods=['get'])
     def histogram(self, request, pk=None):
         transactions = Transaction.objects.filter(clientID=pk)  # prendo tutte le transizioni con la chiave primaria del cliente
-        if not transactions.exists():
+        if not transactions.exists():           # controlla se esiste
             return Response({"error": "No transactions found for this client."}, status=404)
 
         df = pd.DataFrame(list(transactions.values('amount'))) # converto i file in un dataframe con pandas
@@ -206,17 +205,17 @@ class TransactionViewSet(viewsets.ModelViewSet):
         buffer = BytesIO()                  # lo salvo su di un buffer
         plt.savefig(buffer, format='png')
         plt.close()
-        buffer.seek(0)
+        buffer.seek(0)                      # posizione di partenza 0 (inizio dello stream)
 
         return HttpResponse(buffer.getvalue(), content_type='image/png')
     
     @action(detail=True, methods=['get'])
     def lineplot(self, request, pk=None):
-        transactions = Transaction.objects.filter(clientID=pk).order_by('transaction_date')
-        if not transactions.exists():
+        transactions = Transaction.objects.filter(clientID=pk).order_by('transaction_date')          # prende le transizioni per quel cliente, ordinandole per data
+        if not transactions.exists():   # controlla se il cliente ha delle transizioni disponibili
             return Response({"error": "No transactions found for this client."}, status=404)
 
-        df = pd.DataFrame(list(transactions.values('transaction_date', 'amount')))
+        df = pd.DataFrame(list(transactions.values('transaction_date', 'amount')))  # crea un dataframe dalla lista di valori (prende solo la data e l'amount)
         df['transaction_date'] = pd.to_datetime(df['transaction_date'])
 
         plt.figure(figsize=(10, 5))
@@ -236,24 +235,25 @@ class TransactionViewSet(viewsets.ModelViewSet):
 
     @action(detail=True, methods=['get'])
     def scatterplot(self, request, pk=None):
-        transactions = Transaction.objects.filter(clientID=pk)
-        if not transactions.exists():
+        transactions = Transaction.objects.filter(clientID=pk)          # prende le transizioni per quel cliente
+        if not transactions.exists():   # controlla se il cliente ha delle transizioni disponibili
             return Response({"error": "No transactions found for this client."}, status=404)
 
-        df = pd.DataFrame(list(transactions.values('transaction_date', 'amount', 'transaction_type')))
-        df['transaction_date'] = pd.to_datetime(df['transaction_date'])
+        df = pd.DataFrame(list(transactions.values('transaction_date', 'amount', 'transaction_type')))  # usa pandas per convertire le transizioni da una lista di valori per data, amount e tipo
+        df['transaction_date'] = pd.to_datetime(df['transaction_date']) # il database è 2 ore indietro, 
 
-        plt.figure(figsize=(10, 5))
-        sns.scatterplot(data=df, x='transaction_date', y='amount', hue='transaction_type')
-        plt.title('Transazioni nel tempo')
-        plt.xlabel('Data')
-        plt.ylabel('Importo (€)')
-        plt.xticks(rotation=45)
-        plt.tight_layout()
+        plt.figure(figsize=(10, 5)) # dimensione della figure
+        sns.scatterplot(data=df, x='transaction_date', y='amount', hue='transaction_type')  # punti dello scatter plot
+        plt.title('Transazioni nel tempo')  # titolo
+        plt.xlabel('Data')                  # label di x
+        plt.ylabel('Importo (€)')           # label di y
+        plt.xticks(rotation=45)             # numero di ticks sull'asse x
+        plt.tight_layout()                  # stringe il layout
 
-        buffer = BytesIO()
-        plt.savefig(buffer, format='png')
-        plt.close()
-        buffer.seek(0)
+        buffer = BytesIO()                  # carica tutto su memoria
+        plt.savefig(buffer, format='png')   # salva la figura
+        plt.close()                         # la chiude
+        buffer.seek(0)                      # decide la posizione di partenza dello stream di dati
 
-        return HttpResponse(buffer.getvalue(), content_type='image/png')
+        return HttpResponse(buffer.getvalue(), content_type='image/png')    # ritorna la figura
+        # per adesso abbiamo fatto che ritorniamo direttamente l'immagine, si possono tornare anche solo i dati e far plottare al client
