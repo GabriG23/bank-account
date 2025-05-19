@@ -16,30 +16,28 @@ Ogni conto può essere attivo o chiuso, e supporta due tipologie principali: **c
 
 ### Backend - Django REST Framework
 
-backend/
-├── api/
-│ ├── models.py # Definizione delle entità Client, Account e Transaction
-│ ├── views.py # ViewSet con logica di business per ogni modello
-│ ├── serializers.py # Serializzazione dei dati per le API
-│ ├── urls.py # Routing interno delle API
-│ └── admin.py # Registrazione dei modelli per il pannello admin
-└── backend/
-├── settings.py # Configurazione del progetto Django
-└── urls.py # Collegamento alle API
+backend/  
+├── api/  
+│ ├── models.py # Definizione delle entità Client, Account e Transaction  
+│ ├── views.py # ViewSet con logica di business per ogni modello  
+│ ├── serializers.py # Serializzazione dei dati per le API  
+│ ├── urls.py # Routing interno delle API  
+│ └── admin.py # Registrazione dei modelli per il pannello admin  
+└── backend/  
+├── settings.py # Configurazione del progetto Django  
+└── urls.py # Collegamento alle API  
 
 ### Frontend - React
 
-frontend/
-├── App.jsx # Componente principale React
-├── App.css # Stile globale
-├── API.jsx # Interfaccia verso il backend
-├── main.jsx # Entry point dell’app
-├── Components/
-│ └── Homepage.jsx # Home e visualizzazione dati
-└── Design/
-└── Homepage.css # Stile per la homepage
-
-
+frontend/  
+├── App.jsx # Componente principale React  
+├── App.css # Stile globale  
+├── API.jsx # Interfaccia verso il backend  
+├── main.jsx # Entry point dell’app  
+├── Components/  
+│ └── Homepage.jsx # Home e visualizzazione dati  
+└── Design/  
+└── Homepage.css # Stile per la homepage  
 
 ---
 
@@ -57,7 +55,7 @@ frontend/
 - `clientID` (FK → Client)
 - `balance`, `iban`, `opening_date`
 - `account_type`: `DEBT`, `CREDIT`
-- `account_status`: `OPEN`, `CLOSED`, `FROZEN`
+- `account_status`: `OPEN`, `CLOSED`
 
 ### 🔁 Transaction
 - `transactionID` (PK)
@@ -84,7 +82,7 @@ frontend/
 
 ### `AccountStatus`
 - `OPEN`: può ricevere/inviare denaro
-- `CLOSED` / `FROZEN`: disabilitato
+- `CLOSED`: disabilitato
 
 ### `AccountType`
 - `DEBT`: saldo può andare in negativo entro un limite
@@ -146,18 +144,9 @@ Il backend genera 3 grafici dinamici con **Matplotlib** e **Seaborn**, passati d
 - [ViewSets](https://www.django-rest-framework.org/api-guide/viewsets/)
 - [Query API](https://docs.djangoproject.com/en/5.2/topics/db/queries/)
 
-### 🔒 Sicurezza
-- [Gestione Password](https://docs.djangoproject.com/en/5.2/topics/auth/passwords/)
-
 ### 📊 Visualizzazioni
 - [Seaborn Docs](https://seaborn.pydata.org/)
 - [React Plot Integration](https://stackoverflow.com/questions/72303450/how-would-i-render-data-from-a-django-model-with-a-react-frontend)
-
----
-
-## 📌 Tutorial di riferimento
-
-> **Django + React tutorial:** [CRUD App with Axios & Rest Framework – BezKoder](https://www.bezkoder.com/django-react-crud/)
 
 ---
 
