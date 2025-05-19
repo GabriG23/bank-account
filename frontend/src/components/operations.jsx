@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Container, Row, Col, Card, Form, Button, Alert, ListGroup, Modal} from 'react-bootstrap';
+import { Container, Row, Col, Card, Form, Button, Alert, ListGroup, Modal } from 'react-bootstrap';
 import API from '../API';
 import AccountList from './accountlist';
 
@@ -37,65 +37,65 @@ function OperateAccount({ clientID }) {
 
   return (
     <>
-{ !openAccounts || openAccounts.length === 0 ? <AccountList.NoActiveAccounts /> :
-  
+      {!openAccounts || openAccounts.length === 0 ? <AccountList.NoActiveAccounts /> :
 
-    <Container fluid className="pt-5">
-      <Row className="min-vh-75">
-        {/* 1/5 - Conti attivi */}
-        <Col md={2} className="p-3 border-end bg-light">
-          <AccountList.AccountListOpen
-            clientID={clientID}
-            openAccounts={openAccounts}
-            setOpenAccounts={setOpenAccounts}
-            selectedAccountID={selectedAccountID}
-            onSelect={handleSelectAccount}
-          />
-        </Col>
 
-    {/* 1/5 - Bottoni operazioni */}
-    <Col md={2} className="p-4 border-end bg-white">
-      {selectedAccountID ? (
-        <>
-          <h6 className="mb-3">Operazioni disponibili</h6>
-          <ListGroup>
-            {['DEPOSIT', 'WITHDRAW', 'TRANSFER'].map((op) => (
-              <ListGroup.Item
-                key={op}
-                action
-                active={selectedTransaction === op}
-                onClick={() => setSelectedTransaction(op)}
-                style={{ cursor: 'pointer' }}
-              >
-                {operationLabels[op]}
-              </ListGroup.Item>
-            ))}
-          </ListGroup>
-        </>
-      ) : (
-        <div className="text-center text-muted fs-6 mt-5">
-          Seleziona un conto per iniziare.
-        </div>
-      )}
-    </Col>
+        <Container fluid className="pt-5">
+          <Row className="min-vh-75">
+            {/* 1/5 - Conti attivi */}
+            <Col md={2} className="p-3 border-end bg-light">
+              <AccountList.AccountListOpen
+                clientID={clientID}
+                openAccounts={openAccounts}
+                setOpenAccounts={setOpenAccounts}
+                selectedAccountID={selectedAccountID}
+                onSelect={handleSelectAccount}
+              />
+            </Col>
 
-        {/* 3/5 - Form operazione */}
-        <Col md={8} className="p-5">
-          {selectedAccountID ? (
-            <OperationPanel
-              selectedAccountID={selectedAccountID}
-              selectedTransaction={selectedTransaction}
-            />
-          ) : (
-            <div className="text-center text-muted fs-5 mt-5">
-              Seleziona un conto per iniziare.
-            </div>
-          )}
-        </Col>
-      </Row>
-    </Container>
-          }
-  </>
+            {/* 1/5 - Bottoni operazioni */}
+            <Col md={2} className="p-4 border-end bg-white">
+              {selectedAccountID ? (
+                <>
+                  <h6 className="mb-3">Operazioni disponibili</h6>
+                  <ListGroup>
+                    {['DEPOSIT', 'WITHDRAW', 'TRANSFER'].map((op) => (
+                      <ListGroup.Item
+                        key={op}
+                        action
+                        active={selectedTransaction === op}
+                        onClick={() => setSelectedTransaction(op)}
+                        style={{ cursor: 'pointer' }}
+                      >
+                        {operationLabels[op]}
+                      </ListGroup.Item>
+                    ))}
+                  </ListGroup>
+                </>
+              ) : (
+                <div className="text-center text-muted fs-6 mt-5">
+                  Seleziona un conto per iniziare.
+                </div>
+              )}
+            </Col>
+
+            {/* 3/5 - Form operazione */}
+            <Col md={8} className="p-5">
+              {selectedAccountID ? (
+                <OperationPanel
+                  selectedAccountID={selectedAccountID}
+                  selectedTransaction={selectedTransaction}
+                />
+              ) : (
+                <div className="text-center text-muted fs-5 mt-5">
+                  Seleziona un conto per iniziare.
+                </div>
+              )}
+            </Col>
+          </Row>
+        </Container>
+      }
+    </>
   );
 }
 

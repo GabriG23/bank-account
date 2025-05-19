@@ -102,6 +102,6 @@ function AccountListAll({ tipo, accounts, selectedAccountID, onSelect }) {
   );
 }
 
-const AccountList = { AccountListOpen, AccountListAll, NoActiveAccounts};
+const AccountList = { AccountListOpen, AccountListAll, NoActiveAccounts };
 
 export default AccountList;

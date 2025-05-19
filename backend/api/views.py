@@ -197,7 +197,7 @@ class TransactionViewSet(viewsets.ModelViewSet):
 
         plt.figure(figsize=(8, 5))          # creo il plot
         sns.histplot(data=df, x='amount', bins=10, kde=True)
-        plt.title('Transizioni degli importi del cliente sull\'account selezionato')
+        plt.title('Transazioni degli importi del cliente sull\'account selezionato')
         plt.xlabel('Importo della transazione (€)')
         plt.ylabel('Frequenza')
         plt.tight_layout()

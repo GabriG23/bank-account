@@ -37,7 +37,7 @@ function Dashboard({ clientID }) {
     setAccountDetails(null)
   };
 
-    useEffect(() => {
+  useEffect(() => {
     const fetchActiveAccounts = async () => {
       try {
         const data = await API.getActiveClientAccountIDs(clientID);
@@ -55,65 +55,65 @@ function Dashboard({ clientID }) {
 
   return (
     <>
-    { !openAccounts || openAccounts.length === 0 ? <AccountList.NoActiveAccounts /> :
+      {!openAccounts || openAccounts.length === 0 ? <AccountList.NoActiveAccounts /> :
 
-    <Container fluid className="pt-5">
-      <Row className="min-vh-75">
-        {/* Colonna 1 - Conti attivi */}
-        <Col md={2} className="p-3 border-end bg-light">
-          <AccountList.AccountListOpen
-            clientID={clientID}
-            openAccounts={openAccounts}
-            setOpenAccounts={setOpenAccounts}
-            selectedAccountID={selectedAccountID}
-            onSelect={handleSelectAccount}
-          />
-        </Col>
+        <Container fluid className="pt-5">
+          <Row className="min-vh-75">
+            {/* Colonna 1 - Conti attivi */}
+            <Col md={2} className="p-3 border-end bg-light">
+              <AccountList.AccountListOpen
+                clientID={clientID}
+                openAccounts={openAccounts}
+                setOpenAccounts={setOpenAccounts}
+                selectedAccountID={selectedAccountID}
+                onSelect={handleSelectAccount}
+              />
+            </Col>
 
-    <Col md={2} className="p-4 border-end bg-white">
-      {selectedAccountID ? (
-        <>
-          <h6 className="mb-3">Analisi grafica</h6>
-          <ListGroup>
-            {Object.entries(plotLabels).map(([key, label]) => (
-              <ListGroup.Item
-                key={key}
-                action
-                active={selectedPlot === key}
-                onClick={() => setSelectedPlot(key)}
-                style={{ cursor: 'pointer' }}
-              >
-                {label}
-              </ListGroup.Item>
-            ))}
-          </ListGroup>
-        </>
-      ) : (
-        <div className="text-center text-muted fs-6 mt-5">
-          Seleziona un conto per iniziare.
-        </div>
-      )}
-    </Col>
+            <Col md={2} className="p-4 border-end bg-white">
+              {selectedAccountID ? (
+                <>
+                  <h6 className="mb-3">Analisi grafica</h6>
+                  <ListGroup>
+                    {Object.entries(plotLabels).map(([key, label]) => (
+                      <ListGroup.Item
+                        key={key}
+                        action
+                        active={selectedPlot === key}
+                        onClick={() => setSelectedPlot(key)}
+                        style={{ cursor: 'pointer' }}
+                      >
+                        {label}
+                      </ListGroup.Item>
+                    ))}
+                  </ListGroup>
+                </>
+              ) : (
+                <div className="text-center text-muted fs-6 mt-5">
+                  Seleziona un conto per iniziare.
+                </div>
+              )}
+            </Col>
 
-        {/* Colonna 3 - Grafico */}
-        <Col md={8} className="p-5">
-          {selectedAccountID ? (
-            <DataAnalysis
-              clientID={clientID}
-              accountID={selectedAccountID}
-              selectedPlot={selectedPlot}
-              accountDetails={accountDetails}
-            />
-          ) : (
-            <div className="text-center text-muted fs-5 mt-5">
-              Seleziona un conto per iniziare
-            </div>
-          )}
-        </Col>
-      </Row>
-    </Container>
-        }
-        </>
+            {/* Colonna 3 - Grafico */}
+            <Col md={8} className="p-5">
+              {selectedAccountID ? (
+                <DataAnalysis
+                  clientID={clientID}
+                  accountID={selectedAccountID}
+                  selectedPlot={selectedPlot}
+                  accountDetails={accountDetails}
+                />
+              ) : (
+                <div className="text-center text-muted fs-5 mt-5">
+                  Seleziona un conto per iniziare
+                </div>
+              )}
+            </Col>
+          </Row>
+        </Container>
+      }
+    </>
   );
 }
 
@@ -156,12 +156,12 @@ function DataAnalysis({ clientID, accountID, selectedPlot, accountDetails }) {
       <h5 className="mb-3">Analisi delle Transazioni</h5>
 
       {accountDetails && (
-            <>
-      <p className="text-muted">
-        Conto selezionato: <strong>{accountDetails.iban}</strong>
-      </p>
-            </>
-          )}
+        <>
+          <p className="text-muted">
+            Conto selezionato: <strong>{accountDetails.iban}</strong>
+          </p>
+        </>
+      )}
 
 
       {loading && (

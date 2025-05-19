@@ -47,34 +47,34 @@ function Transaction({ clientID }) {
 
   return (
     <>
-    { !openAccounts || openAccounts.length === 0 ? <AccountList.NoActiveAccounts /> :
+      {!openAccounts || openAccounts.length === 0 ? <AccountList.NoActiveAccounts /> :
 
-    <Container fluid className="pt-5">
-      <Row className="min-vh-75">
-        {/* Colonna 1: Lista conti */}
-        <Col md={2} className="p-3 border-end bg-light">
-          <AccountList.AccountListOpen
-            clientID={clientID}
-            openAccounts={openAccounts}
-            setOpenAccounts={setOpenAccounts}
-            selectedAccountID={selectedAccountID}
-            onSelect={handleSelectAccount}
-          />
-        </Col>
+        <Container fluid className="pt-5">
+          <Row className="min-vh-75">
+            {/* Colonna 1: Lista conti */}
+            <Col md={2} className="p-3 border-end bg-light">
+              <AccountList.AccountListOpen
+                clientID={clientID}
+                openAccounts={openAccounts}
+                setOpenAccounts={setOpenAccounts}
+                selectedAccountID={selectedAccountID}
+                onSelect={handleSelectAccount}
+              />
+            </Col>
 
-        {/* Colonna 2: Transazioni */}
-        <Col md={10} className="p-5 justify-content-center">
-          {selectedAccountID ? (
-            <TransactionTable clientID={clientID} accountID={selectedAccountID} accountDetails={accountDetails}/>
-          ) : (
-              <div className="text-center text-muted fs-5 mt-5">
+            {/* Colonna 2: Transazioni */}
+            <Col md={10} className="p-5 justify-content-center">
+              {selectedAccountID ? (
+                <TransactionTable clientID={clientID} accountID={selectedAccountID} accountDetails={accountDetails} />
+              ) : (
+                <div className="text-center text-muted fs-5 mt-5">
                   Seleziona un conto per visualizzare le transazioni
-            </div>
-          )}
-        </Col>
-      </Row>
-    </Container>
-    }
+                </div>
+              )}
+            </Col>
+          </Row>
+        </Container>
+      }
     </>
   );
 }
@@ -142,7 +142,7 @@ function TransactionTable({ clientID, accountID, accountDetails }) {
 
           {accountDetails && (
             <>
-          <p className="text-muted">Conto selezionato: <strong>{accountDetails.iban}</strong></p>
+              <p className="text-muted">Conto selezionato: <strong>{accountDetails.iban}</strong></p>
             </>
           )}
 

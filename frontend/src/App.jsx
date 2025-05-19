@@ -14,7 +14,7 @@ function App() {
   const [check, setCheck] = useState(true)
   const [clientStatus, setClientStatus] = useState("");
   const [username, setUsername] = useState("");
-  
+
   useEffect(() => {
     const fetchUsername = async () => {
       try {
@@ -60,9 +60,9 @@ function App() {
                   : <HomepageClosed clientID={clientID} clientStatus={clientStatus} />
               }
             />
-            <Route path="/operation" element={<Operation clientID={clientID} clientStatus={clientStatus}/>} />
-            <Route path="/transaction" element={<Transaction clientID={clientID}/>} />
-            <Route path="/dashboard" element={<Dashboard clientID={clientID} clientStatus={clientStatus}/>} />
+            <Route path="/operation" element={<Operation clientID={clientID} clientStatus={clientStatus} />} />
+            <Route path="/transaction" element={<Transaction clientID={clientID} />} />
+            <Route path="/dashboard" element={<Dashboard clientID={clientID} clientStatus={clientStatus} />} />
           </Route>
         </Routes>
       </Router>
@@ -71,51 +71,3 @@ function App() {
 }
 
 export default App;
-
-/*
-
-separare i componenti
-dashboard
-operazioni
-dettagli account
-
-table per le transazioni dell'utente
-date.table
-
-libreria per l'ok
-tailwind
-
-check sull'iban giusto
-*/
-
-
-
-// sto gestendo degli account bancari:
-// quando passo alla route Transaction:
-//   return (
-//     <>
-//       <Router>
-//         <Routes>
-//           <Route path="/" element={<Layout username={username} />}>
-//             <Route
-//               index
-//               element={
-//                 check
-//                   ? <AccountStatus clientID={clientID} clientStatus={clientStatus} />
-//                   : <HomepageClosed clientID={clientID} clientStatus={clientStatus} />
-//               }
-//             />
-//             <Route path="/operation" element={<Operation clientID={clientID} clientStatus={clientStatus}/>} />
-//             <Route path="/transaction" element={<Transaction clientID={clientID}/>} />
-//             {/* <Route path="/dashboard" element={<Operation />} /> */}
-//           </Route>
-//         </Routes>
-//       </Router>
-//     </>
-//   );
-// }
-
-// voglio che siano visualizzati a sinitra gli account attivi da selezionare
-// mentre a destra una tabella con tutte le transizione effettuate per quell'account
-
-// voglio a sinistra
