@@ -66,7 +66,11 @@ frontend/
 - `from_account` (FK → Account)
 - `to_account` (FK → Account)
 - `clientID` (FK → Client)
-- `amount`, `operation_date`, `operation_type`: `DEPOSIT`, `WITHDRAW`, `TRANSFER`
+- `amount`, `transaction_date`
+- `transaction_type`: `DEPOSIT`, `WITHDRAW`, `TRANSFER`
+- `transaction_status`: `COMPLETED`, `FAILED`
+
+
 
 ---
 
@@ -96,6 +100,11 @@ frontend/
 - `DEPOSIT`: verso il proprio conto
 - `WITHDRAW`: prelievo dal proprio conto
 - `TRANSFER`: solo verso conti aperti di clienti attivi
+
+### `TransactionStatus`
+- `COMPLETED`: operazione avvenuta con successo
+- `FAILED`: operazione fallita
+
 
 ---
 
