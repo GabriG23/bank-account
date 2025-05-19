@@ -35,9 +35,13 @@ frontend/
 ├── API.jsx # Interfaccia verso il backend  
 ├── main.jsx # Entry point dell’app  
 ├── Components/  
-│ └── Homepage.jsx # Home e visualizzazione dati  
-└── Design/  
-└── Homepage.css # Stile per la homepage  
+│ └── accountlist.jsx # visualizzazione degli account aperti/chiusi  
+│ └── accountstatus.jsx # visualizzazione dello stato degli account  
+│ └── dashboard.jsx # analisi grafica delle transazioni  
+│ └── homepage.jsx # Home e visualizzazione dati  
+│ └── layout.jsx # header e footer dell'app  
+│ └── operation.jsx # operazioni da poter effettuare  
+│ └── transaction.jsx # tabella con le transizioni per conto  
 
 ---
 
