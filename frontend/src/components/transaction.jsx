@@ -6,12 +6,49 @@ import API from '../API';
 function Transaction({ clientID }) {
   const [openAccounts, setOpenAccounts] = useState([]);
   const [selectedAccountID, setSelectedAccountID] = useState(null);
+  const [accountDetails, setAccountDetails] = useState(null);
+
+  const fetchDetails = async () => {
+    try {
+      const data = await API.getAccountInfo(selectedAccountID);
+      setAccountDetails(data);
+    } catch (error) {
+      console.error("Errore nel recupero dei dettagli dell'account", error);
+    }
+  };
+
+  useEffect(() => {
+    if (selectedAccountID) {
+      fetchDetails();
+    }
+  }, [selectedAccountID]);
 
   const handleSelectAccount = (accountID) => {
     setSelectedAccountID(accountID);
+    setAccountDetails(null);
   };
 
+  useEffect(() => {
+    const fetchActiveAccounts = async () => {
+      try {
+        const data = await API.getActiveClientAccountIDs(clientID);
+        setOpenAccounts(data || []);
+      } catch (error) {
+        console.error("Errore nel recupero dei conti attivi:", error);
+        setOpenAccounts([]);
+      } finally {
+        setLoadingAccounts(false);
+      }
+    };
+
+    fetchActiveAccounts();
+  }, [clientID, setOpenAccounts]);
+
+
   return (
+    <>
+    { !openAccounts || openAccounts.length === 0 ? <AccountList.NoActiveAccounts /> :
+
     <Container fluid className="pt-5">
       <Row className="min-vh-75">
         {/* Colonna 1: Lista conti */}
@@ -28,7 +65,7 @@ function Transaction({ clientID }) {
         {/* Colonna 2: Transazioni */}
         <Col md={10} className="p-5 justify-content-center">
           {selectedAccountID ? (
-            <TransactionTable clientID={clientID} accountID={selectedAccountID} />
+            <TransactionTable clientID={clientID} accountID={selectedAccountID} accountDetails={accountDetails}/>
           ) : (
               <div className="text-center text-muted fs-5 mt-5">
                   Seleziona un conto per visualizzare le transazioni
@@ -37,10 +74,12 @@ function Transaction({ clientID }) {
         </Col>
       </Row>
     </Container>
+    }
+    </>
   );
 }
 
-function TransactionTable({ clientID, accountID }) {
+function TransactionTable({ clientID, accountID, accountDetails }) {
   const [transactions, setTransactions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [filterType, setFilterType] = useState('ALL');
@@ -100,7 +139,14 @@ function TransactionTable({ clientID, accountID }) {
       <Row className="mb-3">
         <Col md={6}>
           <h5>Transazioni conto</h5>
-          <p className="text-muted">Conto selezionato: <strong>{accountID}</strong></p>
+
+          {accountDetails && (
+            <>
+          <p className="text-muted">Conto selezionato: <strong>{accountDetails.iban}</strong></p>
+            </>
+          )}
+
+
         </Col>
         <Col md={6} className="d-flex justify-content-end align-items-center">
           <Form.Select

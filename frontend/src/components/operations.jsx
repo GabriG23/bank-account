@@ -1,15 +1,5 @@
 import { useState, useEffect } from 'react';
-import {
-  Container,
-  Row,
-  Col,
-  Card,
-  Form,
-  Button,
-  Alert,
-  ListGroup,
-  Modal
-} from 'react-bootstrap';
+import { Container, Row, Col, Card, Form, Button, Alert, ListGroup, Modal} from 'react-bootstrap';
 import API from '../API';
 import AccountList from './accountlist';
 
@@ -29,7 +19,27 @@ function OperateAccount({ clientID }) {
     setSelectedTransaction(null);
   };
 
+  useEffect(() => {
+    const fetchActiveAccounts = async () => {
+      try {
+        const data = await API.getActiveClientAccountIDs(clientID);
+        setOpenAccounts(data || []);
+      } catch (error) {
+        console.error("Errore nel recupero dei conti attivi:", error);
+        setOpenAccounts([]);
+      } finally {
+        setLoadingAccounts(false);
+      }
+    };
+
+    fetchActiveAccounts();
+  }, [clientID, setOpenAccounts]);
+
   return (
+    <>
+{ !openAccounts || openAccounts.length === 0 ? <AccountList.NoActiveAccounts /> :
+  
+
     <Container fluid className="pt-5">
       <Row className="min-vh-75">
         {/* 1/5 - Conti attivi */}
@@ -84,6 +94,8 @@ function OperateAccount({ clientID }) {
         </Col>
       </Row>
     </Container>
+          }
+  </>
   );
 }
 
@@ -174,13 +186,15 @@ function OperationPanel({ selectedAccountID, selectedTransaction }) {
     <>
       <Card className="p-4 shadow-sm">
         <Card.Title>
-          {operationLabels[selectedTransaction]} su conto #{selectedAccountID}
+          {operationLabels[selectedTransaction]} sul conto selezionato
         </Card.Title>
         <Card.Text>
           {accountDetails && (
             <>
               <strong>IBAN:</strong> {accountDetails.iban}<br />
-              <strong>Saldo attuale:</strong> €{accountDetails.balance.toFixed(2)}
+              <strong>Saldo attuale:</strong> €{accountDetails.balance.toFixed(2)}<br />
+              <strong>Tipo di conto:</strong> {accountDetails.account_type === 'DEBT' ? 'DEBITO' : 'CREDITO'}<br />
+              <strong>Info:</strong> {accountDetails.account_type === 'DEBT' ? 'Il conto può andare in negativo fino a -1000€, prelievi illimitati' : 'Il conto non può andare in negativo, prelievi limitati a 500€'}
             </>
           )}
         </Card.Text>

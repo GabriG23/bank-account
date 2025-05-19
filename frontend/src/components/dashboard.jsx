@@ -14,12 +14,49 @@ function Dashboard({ clientID }) {
   const [selectedAccountID, setSelectedAccountID] = useState(null);
   const [selectedPlot, setSelectedPlot] = useState(null);
 
+  const [accountDetails, setAccountDetails] = useState(null);
+
+  const fetchDetails = async () => {
+    try {
+      const data = await API.getAccountInfo(selectedAccountID);
+      setAccountDetails(data);
+    } catch (error) {
+      console.error("Errore nel recupero dei dettagli dell'account", error);
+    }
+  };
+
+  useEffect(() => {
+    if (selectedAccountID) {
+      fetchDetails();
+    }
+  }, [selectedAccountID]);
+
   const handleSelectAccount = (accountID) => {
     setSelectedAccountID(accountID);
     setSelectedPlot(null); // Reset grafico selezionato
+    setAccountDetails(null)
   };
 
+    useEffect(() => {
+    const fetchActiveAccounts = async () => {
+      try {
+        const data = await API.getActiveClientAccountIDs(clientID);
+        setOpenAccounts(data || []);
+      } catch (error) {
+        console.error("Errore nel recupero dei conti attivi:", error);
+        setOpenAccounts([]);
+      } finally {
+        setLoadingAccounts(false);
+      }
+    };
+
+    fetchActiveAccounts();
+  }, [clientID, setOpenAccounts]);
+
   return (
+    <>
+    { !openAccounts || openAccounts.length === 0 ? <AccountList.NoActiveAccounts /> :
+
     <Container fluid className="pt-5">
       <Row className="min-vh-75">
         {/* Colonna 1 - Conti attivi */}
@@ -65,6 +102,7 @@ function Dashboard({ clientID }) {
               clientID={clientID}
               accountID={selectedAccountID}
               selectedPlot={selectedPlot}
+              accountDetails={accountDetails}
             />
           ) : (
             <div className="text-center text-muted fs-5 mt-5">
@@ -74,10 +112,12 @@ function Dashboard({ clientID }) {
         </Col>
       </Row>
     </Container>
+        }
+        </>
   );
 }
 
-function DataAnalysis({ clientID, accountID, selectedPlot }) {
+function DataAnalysis({ clientID, accountID, selectedPlot, accountDetails }) {
   const [imageUrl, setImageUrl] = useState(null);
   const [loading, setLoading] = useState(false);
 
@@ -114,9 +154,15 @@ function DataAnalysis({ clientID, accountID, selectedPlot }) {
   return (
     <div className="text-center">
       <h5 className="mb-3">Analisi delle Transazioni</h5>
+
+      {accountDetails && (
+            <>
       <p className="text-muted">
-        Conto selezionato: <strong>{accountID}</strong>
+        Conto selezionato: <strong>{accountDetails.iban}</strong>
       </p>
+            </>
+          )}
+
 
       {loading && (
         <div className="mt-4">

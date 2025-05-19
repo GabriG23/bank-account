@@ -54,39 +54,13 @@ function Header({ username }) {
             Dashboard
           </Nav.Link>
           <span className="navbar-text ms-3 fw-semibold">
-            Benvenuto {username ? `, ${username}` : ""}
+            Benvenuto{username ? `, ${username}` : ""}
           </span>
         </Nav>
       </Container>
     </Navbar>
   );
 }
-
-// function Header({ username }) {
-//   return (
-//     <Navbar className="custom-navbar" fixed="top" bg="light">
-//       <Container>
-//         <Navbar.Brand as={Link} to="/" className="d-flex align-items-center">
-//           <img
-//             src={agmlogo}
-//             alt="Logo banca"
-//             height="30"
-//             className="me-2"
-//           />
-//         </Navbar.Brand>
-//         <Nav className="ms-auto align-items-center">
-//           <Nav.Link as={Link} to="/" className="px-2">Home</Nav.Link>
-//           <Nav.Link as={Link} to="/dashboard" className="px-2">Dashboard</Nav.Link>
-//           <Nav.Link as={Link} to="/operation" className="px-2">Operazioni</Nav.Link>
-//           <Nav.Link as={Link} to="/transaction" className="px-2">Transizioni</Nav.Link>
-//           <span className="navbar-text ms-3 fw-semibold">
-//             Benvenuto{username ? `, ${username}` : ''}
-//           </span>
-//         </Nav>
-//       </Container>
-//     </Navbar>
-//   );
-// }
 
 function Footer() {
   return (
@@ -101,8 +75,9 @@ function Footer() {
             <h6>Link utili</h6>
             <ul className="list-unstyled small">
               <li><Link to="/" className="text-dark text-decoration-none">Home</Link></li>
+              <li><Link to="/operation" className="text-dark text-decoration-none">Operazioni</Link></li>
+              <li><Link to="/transaction" className="text-dark text-decoration-none">Transizioni</Link></li>
               <li><Link to="/dashboard" className="text-dark text-decoration-none">Dashboard</Link></li>
-              <li><Link to="/profile" className="text-dark text-decoration-none">Profilo</Link></li>
             </ul>
           </Col>
           <Col md={4}>

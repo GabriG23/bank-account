@@ -79,9 +79,9 @@ class Account(models.Model):
 
         if self.account_type == 'CREDIT':
             if amount > 500:
-                raise ValidationError("I conti di tipo 'Credit' non permettono prelievi oltre i 500€.")
+                raise ValidationError("I conti di tipo CREDITO non permettono prelievi oltre i 500€.")
             if self.balance - amount < 0:
-                raise ValidationError("I conti di tipo 'Credit' non posso avere saldo negativo.")
+                raise ValidationError("I conti di tipo CREDITO non posso avere saldo negativo.")
         elif self.account_type == 'DEBT':
             debt_limit = Decimal('-1000')
             if self.balance - amount < debt_limit:

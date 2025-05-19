@@ -31,7 +31,7 @@ function App() {
     const fetchStatus = async () => {
       try {
         const data = await API.getClientStatus(clientID);
-        if (data.client_status === 'ACTIVE' || data.client_status === 'SUSPENDED') {
+        if (data.client_status === 'OPEN') {
           setCheck(true);
         } else {
           if (data.client_status === 'CLOSED') {
