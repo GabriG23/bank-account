@@ -1,6 +1,7 @@
-import { Link, Outlet } from 'react-router-dom';
+import { Link, Outlet, useLocation } from 'react-router-dom';
 import { Navbar, Nav, Container, Row, Col } from 'react-bootstrap';
 import agmlogo from '../assets/agm_solutions.png';
+
 
 function Layout({ username }) {
   return (
@@ -13,32 +14,79 @@ function Layout({ username }) {
     </>
   );
 }
-
 function Header({ username }) {
+  const location = useLocation();
+
   return (
     <Navbar className="custom-navbar" fixed="top" bg="light">
       <Container>
         <Navbar.Brand as={Link} to="/" className="d-flex align-items-center">
-          <img
-            src={agmlogo}
-            alt="Logo banca"
-            height="30"
-            className="me-2"
-          />
+          <img src={agmlogo} alt="Logo banca" height="30" className="me-2" />
         </Navbar.Brand>
         <Nav className="ms-auto align-items-center">
-          <Nav.Link as={Link} to="/" className="px-2">Home</Nav.Link>
-          <Nav.Link as={Link} to="/dashboard" className="px-2">Dashboard</Nav.Link>
-          <Nav.Link as={Link} to="/operation" className="px-2">Operazioni</Nav.Link>
-          <Nav.Link as={Link} to="/transaction" className="px-2">Transizioni</Nav.Link>
+          <Nav.Link
+            as={Link}
+            to="/"
+            className={`px-2 ${location.pathname === "/" ? "active" : ""}`}
+          >
+            Home
+          </Nav.Link>
+
+          <Nav.Link
+            as={Link}
+            to="/operation"
+            className={`px-2 ${location.pathname === "/operation" ? "active" : ""}`}
+          >
+            Operazioni
+          </Nav.Link>
+          <Nav.Link
+            as={Link}
+            to="/transaction"
+            className={`px-2 ${location.pathname === "/transaction" ? "active" : ""}`}
+          >
+            Transizioni
+          </Nav.Link>
+          <Nav.Link
+            as={Link}
+            to="/dashboard"
+            className={`px-2 ${location.pathname === "/dashboard" ? "active" : ""}`}
+          >
+            Dashboard
+          </Nav.Link>
           <span className="navbar-text ms-3 fw-semibold">
-            Benvenuto{username ? `, ${username}` : ''}
+            Benvenuto {username ? `, ${username}` : ""}
           </span>
         </Nav>
       </Container>
     </Navbar>
   );
 }
+
+// function Header({ username }) {
+//   return (
+//     <Navbar className="custom-navbar" fixed="top" bg="light">
+//       <Container>
+//         <Navbar.Brand as={Link} to="/" className="d-flex align-items-center">
+//           <img
+//             src={agmlogo}
+//             alt="Logo banca"
+//             height="30"
+//             className="me-2"
+//           />
+//         </Navbar.Brand>
+//         <Nav className="ms-auto align-items-center">
+//           <Nav.Link as={Link} to="/" className="px-2">Home</Nav.Link>
+//           <Nav.Link as={Link} to="/dashboard" className="px-2">Dashboard</Nav.Link>
+//           <Nav.Link as={Link} to="/operation" className="px-2">Operazioni</Nav.Link>
+//           <Nav.Link as={Link} to="/transaction" className="px-2">Transizioni</Nav.Link>
+//           <span className="navbar-text ms-3 fw-semibold">
+//             Benvenuto{username ? `, ${username}` : ''}
+//           </span>
+//         </Nav>
+//       </Container>
+//     </Navbar>
+//   );
+// }
 
 function Footer() {
   return (

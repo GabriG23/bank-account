@@ -1,7 +1,17 @@
 import { useState, useEffect } from 'react';
-import { Container, Row, Col, Card, Form, Button, Alert, ListGroup, Modal, Spinner } from 'react-bootstrap';
+import {
+  Container,
+  Row,
+  Col,
+  Card,
+  Form,
+  Button,
+  Alert,
+  ListGroup,
+  Modal
+} from 'react-bootstrap';
 import API from '../API';
-import AccountList from './accountlist'; // Usa quello che ti ho sistemato prima
+import AccountList from './accountlist';
 
 const operationLabels = {
   DEPOSIT: 'DEPOSITO',
@@ -16,15 +26,14 @@ function OperateAccount({ clientID }) {
 
   const handleSelectAccount = (accountID) => {
     setSelectedAccountID(accountID);
-    setSelectedTransaction(null); // resetta operazione
+    setSelectedTransaction(null);
   };
 
   return (
-    <>
     <Container fluid className="pt-5">
-      <Row>
-        {/* COLONNA 1: Lista conti attivi */}
-        <Col md={2} className="p-2 border-end bg-light">
+      <Row className="min-vh-75">
+        {/* 1/5 - Conti attivi */}
+        <Col md={2} className="p-3 border-end bg-light">
           <AccountList.AccountListOpen
             clientID={clientID}
             openAccounts={openAccounts}
@@ -34,32 +43,55 @@ function OperateAccount({ clientID }) {
           />
         </Col>
 
-        {/* COLONNA 2 e 3: Area operazioni e form */}
-        <Col md={10} className="p-5 d-flex flex-column justify-content-center">
+    {/* 1/5 - Bottoni operazioni */}
+    <Col md={2} className="p-4 border-end bg-white">
+      {selectedAccountID ? (
+        <>
+          <h6 className="mb-3">Operazioni disponibili</h6>
+          <ListGroup>
+            {['DEPOSIT', 'WITHDRAW', 'TRANSFER'].map((op) => (
+              <ListGroup.Item
+                key={op}
+                action
+                active={selectedTransaction === op}
+                onClick={() => setSelectedTransaction(op)}
+                style={{ cursor: 'pointer' }}
+              >
+                {operationLabels[op]}
+              </ListGroup.Item>
+            ))}
+          </ListGroup>
+        </>
+      ) : (
+        <div className="text-center text-muted fs-6 mt-5">
+          Seleziona un conto per iniziare.
+        </div>
+      )}
+    </Col>
+
+        {/* 3/5 - Form operazione */}
+        <Col md={8} className="p-5">
           {selectedAccountID ? (
             <OperationPanel
               selectedAccountID={selectedAccountID}
               selectedTransaction={selectedTransaction}
-              setSelectedTransaction={setSelectedTransaction}
             />
           ) : (
-            <div className="text-center text-muted mt-5">Seleziona un conto per iniziare</div>
+            <div className="text-center text-muted fs-5 mt-5">
+              Seleziona un conto per iniziare.
+            </div>
           )}
         </Col>
       </Row>
     </Container>
-    </>
   );
 }
 
-function OperationPanel({ selectedAccountID, selectedTransaction, setSelectedTransaction }) {
+function OperationPanel({ selectedAccountID, selectedTransaction }) {
   const [amount, setAmount] = useState('');
-  // const [targetAccount, setTargetAccount] = useState('');
   const [iban, setIban] = useState('');
-
   const [error, setError] = useState('');
   const [successMsg, setSuccessMsg] = useState('');
-
   const [showModal, setShowModal] = useState(false);
   const [accountDetails, setAccountDetails] = useState(null);
 
@@ -78,7 +110,14 @@ function OperationPanel({ selectedAccountID, selectedTransaction, setSelectedTra
     }
   }, [selectedAccountID]);
 
-  const handleSubmit = async () => {
+  useEffect(() => {
+    setAmount('');
+    setIban('');
+    setError('');
+    setSuccessMsg('');
+  }, [selectedTransaction]);
+
+  const handleSubmit = () => {
     setError('');
     setSuccessMsg('');
 
@@ -92,7 +131,8 @@ function OperationPanel({ selectedAccountID, selectedTransaction, setSelectedTra
       setError("Inserisci un IBAN valido.");
       return;
     }
-    setShowModal(true); // mostra popup di conferma
+
+    setShowModal(true);
   };
 
   const handleOperation = async () => {
@@ -111,10 +151,9 @@ function OperationPanel({ selectedAccountID, selectedTransaction, setSelectedTra
       setAmount('');
       setIban('');
       await fetchDetails();
-
     } catch (err) {
-      if (err.response && err.response.data && err.response.data.error) {
-        setError(err.response.data.error); // 🟢 Mostra errore dettagliato
+      if (err.response?.data?.error) {
+        setError(err.response.data.error);
       } else {
         setError("Errore durante l'operazione.");
       }
@@ -123,100 +162,73 @@ function OperationPanel({ selectedAccountID, selectedTransaction, setSelectedTra
     }
   };
 
+  if (!selectedTransaction) {
+    return (
+      <div className="text-center mt-5 text-muted fs-5">
+        Seleziona un'operazione per continuare.
+      </div>
+    );
+  }
+
   return (
-    <Container fluid className="mt-4">
-      <Row>
-        {/* Colonna: Operazioni */}
-        <Col md={3} className="border-end">
-          <h6>Operazioni disponibili</h6>
-          <ListGroup>
-            {['DEPOSIT', 'WITHDRAW', 'TRANSFER'].map((op) => (
-              <ListGroup.Item
-                key={op}
-                action
-                active={selectedTransaction === op}
-                onClick={() => {
-                  setSelectedTransaction(op);
-                  setAmount('');
-                  setIban('');
-                  setError('');
-                  setSuccessMsg('');
-                }}
-              >
-                {operationLabels[op]}
-              </ListGroup.Item>
-            ))}
-          </ListGroup>
-        </Col>
-
-        {/* Colonna: Form operazione */}
-        <Col md={9}>
-          {selectedTransaction ? (
-            <Card className="p-4 shadow-sm">
-              <Card.Title>{operationLabels[selectedTransaction]} su conto #{selectedAccountID} </Card.Title>
-              <Card.Text>
-
-                {accountDetails && (
-                    <>
-                      <strong>IBAN:</strong> {accountDetails.iban}<br />
-                      <strong>Saldo attuale:</strong> €{accountDetails.balance.toFixed(2)}
-                    </>
-                  )}
-                {/* <strong>IBAN:</strong> {accountDetails.iban}<br />
-                <strong>Saldo attuale:</strong> €{accountDetails.balance.toFixed(2)} */}
-              </Card.Text>
-              
-              <Form className="mt-3">
-                <Form.Group className="mb-3">
-                  <Form.Label>Inserisci l'importo</Form.Label>
-                  <Form.Control
-                    type="number"
-                    value={amount}
-                    onChange={(e) => setAmount(e.target.value)}
-                    placeholder="Importo"
-                  />
-                </Form.Group>
-
-                {selectedTransaction === 'TRANSFER' && (
-                  <Form.Group className="mb-3">
-                    <Form.Label>IBAN del destinatario</Form.Label>
-                    <Form.Control
-                      type="text"
-                      value={iban}
-                      onChange={(e) => setIban(e.target.value)}
-                      placeholder="IBAN"
-                    />
-                  </Form.Group>
-                )}
-
-                {error && <Alert variant="danger">{error}</Alert>}
-                {successMsg && <Alert variant="success">{successMsg}</Alert>}
-
-                <Button variant="primary" onClick={handleSubmit}>
-                  Conferma
-                </Button>
-              </Form>
-            </Card>
-          
-        
-        
-        
-        ) : (
-            <div className="text-center mt-5 text-muted">
-              Seleziona un'operazione per continuare.
-            </div>
+    <>
+      <Card className="p-4 shadow-sm">
+        <Card.Title>
+          {operationLabels[selectedTransaction]} su conto #{selectedAccountID}
+        </Card.Title>
+        <Card.Text>
+          {accountDetails && (
+            <>
+              <strong>IBAN:</strong> {accountDetails.iban}<br />
+              <strong>Saldo attuale:</strong> €{accountDetails.balance.toFixed(2)}
+            </>
           )}
-        </Col>
-      </Row>
+        </Card.Text>
 
+        <Form className="mt-3">
+          <Form.Group className="mb-3">
+            <Form.Label>Importo</Form.Label>
+            <Form.Control
+              type="number"
+              placeholder="Inserisci l'importo"
+              value={amount}
+              onChange={(e) => setAmount(e.target.value)}
+            />
+          </Form.Group>
 
+          {selectedTransaction === 'TRANSFER' && (
+            <Form.Group className="mb-3">
+              <Form.Label>IBAN destinatario</Form.Label>
+              <Form.Control
+                type="text"
+                placeholder="IBAN"
+                value={iban}
+                onChange={(e) => setIban(e.target.value)}
+              />
+            </Form.Group>
+          )}
+
+          {error && <Alert variant="danger">{error}</Alert>}
+          {successMsg && <Alert variant="success">{successMsg}</Alert>}
+
+          <Button variant="primary" onClick={handleSubmit}>
+            Conferma
+          </Button>
+        </Form>
+      </Card>
+
+      {/* Modal conferma */}
       <Modal show={showModal} onHide={() => setShowModal(false)} centered>
-         <Modal.Header closeButton>
+        <Modal.Header closeButton>
           <Modal.Title>Conferma operazione</Modal.Title>
-         </Modal.Header>
-           <Modal.Body>
-             <p>Stai per eseguire <strong>{operationLabels[selectedTransaction]}</strong> di <strong>€{parseFloat(amount).toFixed(2)}</strong>.</p>
-           {selectedTransaction === 'TRANSFER' && ( <p>Verso l'IBAN: <strong>{iban}</strong></p>
+        </Modal.Header>
+        <Modal.Body>
+          <p>
+            Stai per eseguire <strong>{operationLabels[selectedTransaction]}</strong> di{' '}
+            <strong>€{parseFloat(amount).toFixed(2)}</strong>.
+          </p>
+          {selectedTransaction === 'TRANSFER' && (
+            <p>Verso l'IBAN: <strong>{iban}</strong></p>
           )}
           <p>Sei sicuro di voler procedere?</p>
         </Modal.Body>
@@ -225,8 +237,7 @@ function OperationPanel({ selectedAccountID, selectedTransaction, setSelectedTra
           <Button variant="success" onClick={handleOperation}>Conferma</Button>
         </Modal.Footer>
       </Modal>
-
-    </Container>
+    </>
   );
 }
 

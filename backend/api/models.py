@@ -118,5 +118,5 @@ class Transaction(models.Model):    # Transazione fatte dal cliente
     
     def save(self, *args, **kwargs):
         if not self.transaction_date:
-            self.transaction_date = timezone.now().date()
+            self.transaction_date = timezone.now()  # Corretto
         super().save(*args, **kwargs)
