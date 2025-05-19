@@ -136,7 +136,7 @@ Il backend genera 3 grafici dinamici con **Matplotlib** e **Seaborn**, passati d
 
 - Tutte le operazioni gestiscono errori con codice di stato HTTP e messaggi dettagliati.
 - Bonifici non consentiti su IBAN errati, conti chiusi o appartenenti allo stesso cliente.
-
+<!-- 
 ---
 
 ## 🔗 Link Utili
@@ -157,4 +157,4 @@ Il backend genera 3 grafici dinamici con **Matplotlib** e **Seaborn**, passati d
 ## 📎 Note Finali
 
 - Tutti i modelli, viste e serializzatori seguono una struttura modulare.
-- È possibile estendere la piattaforma con autenticazione avanzata, gestione carte, limiti personalizzati o reportistica mensile.
+- È possibile estendere la piattaforma con autenticazione avanzata, gestione carte, limiti personalizzati o reportistica mensile. -->
