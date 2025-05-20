@@ -44,7 +44,7 @@ function Header({ username }) {
             to="/transaction"
             className={`px-2 ${location.pathname === "/transaction" ? "active" : ""}`}
           >
-            Transizioni
+            Transazioni
           </Nav.Link>
           <Nav.Link
             as={Link}
@@ -76,7 +76,7 @@ function Footer() {
             <ul className="list-unstyled small">
               <li><Link to="/" className="text-dark text-decoration-none">Home</Link></li>
               <li><Link to="/operation" className="text-dark text-decoration-none">Operazioni</Link></li>
-              <li><Link to="/transaction" className="text-dark text-decoration-none">Transizioni</Link></li>
+              <li><Link to="/transaction" className="text-dark text-decoration-none">Transazioni</Link></li>
               <li><Link to="/dashboard" className="text-dark text-decoration-none">Dashboard</Link></li>
             </ul>
           </Col>

@@ -27,8 +27,6 @@ function OperateAccount({ clientID }) {
       } catch (error) {
         console.error("Errore nel recupero dei conti attivi:", error);
         setOpenAccounts([]);
-      } finally {
-        setLoadingAccounts(false);
       }
     };
 
