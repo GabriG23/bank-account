@@ -70,8 +70,6 @@ frontend/
 - `transaction_type`: `DEPOSIT`, `WITHDRAW`, `TRANSFER`
 - `transaction_status`: `COMPLETED`, `FAILED`
 
-
-
 ---
 
 ## Relazioni
@@ -145,25 +143,3 @@ Il backend genera 3 grafici dinamici con **Matplotlib** e **Seaborn**, passati d
 
 - Tutte le operazioni gestiscono errori con codice di stato HTTP e messaggi dettagliati.
 - Bonifici non consentiti su IBAN errati, conti chiusi o appartenenti allo stesso cliente.
-<!-- 
----
-
-## 🔗 Link Utili
-
-### 🛠 Django
-- [Admin Panel](https://docs.djangoproject.com/en/5.2/ref/contrib/admin/)
-- [Models](https://docs.djangoproject.com/en/5.1/topics/db/models/)
-- [Serializers](https://www.django-rest-framework.org/api-guide/serializers/)
-- [ViewSets](https://www.django-rest-framework.org/api-guide/viewsets/)
-- [Query API](https://docs.djangoproject.com/en/5.2/topics/db/queries/)
-
-### 📊 Visualizzazioni
-- [Seaborn Docs](https://seaborn.pydata.org/)
-- [React Plot Integration](https://stackoverflow.com/questions/72303450/how-would-i-render-data-from-a-django-model-with-a-react-frontend)
-
----
-
-## 📎 Note Finali
-
-- Tutti i modelli, viste e serializzatori seguono una struttura modulare.
-- È possibile estendere la piattaforma con autenticazione avanzata, gestione carte, limiti personalizzati o reportistica mensile. -->
