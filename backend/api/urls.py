@@ -8,7 +8,6 @@ router = DefaultRouter()
 router.register(r'clients', ClientViewSet)
 router.register(r'accounts', AccountViewSet)
 router.register(r'transactions', TransactionViewSet)
-# router.register(r'auth', AuthViewSet, basename='auth')
 
 urlpatterns = [
     path('', include(router.urls))
