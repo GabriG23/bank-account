@@ -1,6 +1,6 @@
-# 💰 Bank Account
+# Conti Bancari
 
-## 📌 Descrizione del Progetto
+## Descrizione del Progetto
 
 Il progetto ha lo scopo di gestire gli account bancari dei clienti attraverso una piattaforma web integrata con **Django REST Framework** (backend) e **React** (frontend). I clienti possono effettuare operazioni come:
 
@@ -12,7 +12,7 @@ Ogni conto può essere attivo o chiuso, e supporta due tipologie principali: **c
 
 ---
 
-## 🧱 Architettura del Progetto
+## Architettura del Progetto
 
 ### Backend - Django REST Framework
 
@@ -45,23 +45,23 @@ frontend/
 
 ---
 
-## 📚 Entità e Attributi
+## Entità e Attributi
 
-### 🧍 Client
+### Client
 - `clientID` (PK)
 - `name`, `surname`, `username`, `email`
 - `registration_date`, `birthdate`
 - `phone`, `address`
 - `client_status`: `OPEN`, `CLOSED`
 
-### 🏦 Account
+### Account
 - `accountID` (PK)
 - `clientID` (FK → Client)
 - `balance`, `iban`, `opening_date`
 - `account_type`: `DEBT`, `CREDIT`
 - `account_status`: `OPEN`, `CLOSED`
 
-### 🔁 Transaction
+### Transaction
 - `transactionID` (PK)
 - `from_account` (FK → Account)
 - `to_account` (FK → Account)
@@ -74,7 +74,7 @@ frontend/
 
 ---
 
-## 🔗 Relazioni
+## Relazioni
 
 - **Client → Account**: 1 → N
 - **Client → Transaction**: 1 → N
@@ -82,7 +82,7 @@ frontend/
 
 ---
 
-## ✅ Vincoli e Regole
+## Vincoli e Regole
 
 ### `ClientStatus`
 - `OPEN`: può effettuare operazioni
@@ -108,22 +108,22 @@ frontend/
 
 ---
 
-## ⚙️ Funzionalità Principali (Views)
+## Funzionalità Principali (Views)
 
-### 🔹 ClientViewSet
+### ClientViewSet
 - `/info/`: Informazioni del cliente
 - `/status/`: Stato attuale
 - `/username/`: Visualizzazione frontend
 - `/accounts/`: Lista conti associati
 - `/active_accounts/`: Solo conti attivi
 
-### 🔹 AccountViewSet
+### AccountViewSet
 - `/info/`: Dati del conto
 - `/deposit/`: Deposita importo
 - `/withdraw/`: Preleva importo
 - `/transfer/`: Bonifico a altro conto
 
-### 🔹 TransactionViewSet
+### TransactionViewSet
 - `/by-client-account/`: Filtra per cliente e conto
 - `/histogram/`: Istogramma importi transazioni
 - `/lineplot/`: Andamento temporale
@@ -131,17 +131,17 @@ frontend/
 
 ---
 
-## 📊 Analisi Dati & Grafici
+## Analisi Dati & Grafici
 
 Il backend genera 3 grafici dinamici con **Matplotlib** e **Seaborn**, passati direttamente al frontend:
 
-1. 📈 **Istogramma**: distribuzione degli importi delle transazioni (`/histogram`)
-2. 📉 **Line Plot**: andamento temporale delle transazioni (`/lineplot`)
-3. 🟢 **Scatter Plot**: importi per tipo di operazione (`/scatterplot`)
+1. **Istogramma**: distribuzione degli importi delle transazioni (`/histogram`)
+2. **Line Plot**: andamento temporale delle transazioni (`/lineplot`)
+3. **Scatter Plot**: importi per tipo di operazione (`/scatterplot`)
 
 ---
 
-## 🧪 Test & Validazioni
+## Test & Validazioni
 
 - Tutte le operazioni gestiscono errori con codice di stato HTTP e messaggi dettagliati.
 - Bonifici non consentiti su IBAN errati, conti chiusi o appartenenti allo stesso cliente.
